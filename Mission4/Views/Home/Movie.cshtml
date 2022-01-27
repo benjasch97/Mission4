@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Submit Movie";
+}
+
+@model Mission4.Models.MovieResponse
+
+@*This is the form page for submitting a movie. It contains all the proper options.*@
+
+<h1>Submit a movie!</h1>
+
+<div>
+    <form method="post">
+        <label asp-for="Category">Category:</label>
+        <input asp-for="Category" /><br />
+
+        <label asp-for="Title">Title:</label>
+        <input asp-for="Title" /><br />
+
+        <label asp-for="Year">Year:</label>
+        <input asp-for="Year" /><br />
+
+        <label asp-for="Director">Director:</label>
+        <input asp-for="Director" /><br />
+
+        <label asp-for="Rating">Rating:</label>
+        <select asp-for="Rating">
+            <br />
+            <option>G</option>
+            <option>PG</option>
+            <option>PG-13</option>
+            <option>R</option>
+        </select><br />
+
+        <label asp-for="Edited">Edited?:</label>
+        <select asp-for="Edited">
+            <br />
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select><br />
+
+        <label asp-for="Borrower">Lent to:</label>
+        <input asp-for="Borrower" /><br />
+
+        <label asp-for="Notes">Notes:</label>
+        <input asp-for="Notes" /><br />
+
+        <button type="submit">Submit Application</button>
+
+        <div asp-validation-summary="All"></div>
+    </form>
+</div>
