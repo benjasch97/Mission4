@@ -10,8 +10,9 @@ namespace Mission4.Models
 {
     public class MovieResponse
     {
+        [Key]
         [Required]
-        public string Category { get; set; }
+        public int Movie_ID { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
@@ -24,6 +25,10 @@ namespace Mission4.Models
         public string Borrower { get; set; }
         [MaxLength(25)]
         public string Notes { get; set; }
-
+        
+        // Foreign Key Relationship
+        [Required]
+        public int CategoryID { get; set; }
+        public Category Category { get; set; }
     }
 }

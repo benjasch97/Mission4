@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission4.Models;
 using System;
@@ -11,11 +12,11 @@ namespace Mission4.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private MovieContext _movieContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(MovieContext someName)
         {
-            _logger = logger;
+            _movieContext = someName;
         }
 
         public IActionResult Index()
@@ -30,23 +31,61 @@ namespace Mission4.Controllers
         [HttpGet]
         public IActionResult Movie()
         {
+            ViewBag.Categories = _movieContext.Categories.ToList();
+            
             return View();
         }
         [HttpPost]
         public IActionResult Movie(MovieResponse movie) 
         {
-            return View();
-        }
+            if (ModelState.IsValid)
+            {
+                _movieContext.Add(movie);
+                _movieContext.SaveChanges();
+                return View("MovieConfirmation", movie);
+            }
+            else
+            {
+                ViewBag.Categories = _movieContext.Categories.ToList();
 
-        public IActionResult Privacy()
+                return View();
+            }
+        }
+        public IActionResult MovieList()
+        {
+            var movies = _movieContext.Responses
+                .Include(x => x.Category)
+                .ToList();
+
+            
+            return View(movies);
+        }
+        [HttpGet]
+        public IActionResult Edit(int categoryid)
+        {
+            ViewBag.Categories = _movieContext.Categories.ToList();
+
+            var movie = _movieContext.Responses.Single(x => x.CategoryID == categoryid);
+            
+            return View("Movie", movie);
+        }
+        [HttpPost]
+        public IActionResult Edit(MovieResponse m)
+        {
+            _movieContext.Update(m);
+            _movieContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
+        }
+        [HttpGet]
+        public IActionResult Delete()
         {
             return View();
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[HttpPost]
+        //public IActionResult Delete()
+        //{
+        //    return View();
+        //}
     }
 }
